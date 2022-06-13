@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  # take all the incoming requests and trigger the php interprator
+  server:
+  # executes php code
+  # php:
+  # mysql:
+  # composer:
+  # artisan:
+  # npm:

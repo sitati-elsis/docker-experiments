@@ -1,0 +1,48 @@
+version: '3.8'
+services:
+# serives are the containers
+  mongodb:
+    image: "mongo"
+    volumes:
+      - data:/data/db
+    env_file:
+        - ./env/mongo.env
+    # environment:
+      # - MONGO_INITDB_ROOT_USERNAME: max
+      # - MONGO_INITDB_ROOT_PASSWORD: secret
+  
+  backend:
+    # shorter form
+    build: ./backend
+    # longer version 
+    # build:
+    #   context: ./backend
+    #   dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - logs:/app/logs
+      # bind mounts dont need to be declared on the outer volume
+      - ./backend:/app
+      - /app/node_modules
+    env_file:
+      - ./env/backend.env
+    depends_on:
+      - mongodb
+  
+  frontend:
+    build: ./frontend
+    ports:
+    - "3000:3000"
+    volumes:
+      - ./frontend/src:/app/src
+    stdin_open: true
+    tty: true
+    depends_on:
+      - backend
+
+# for named volumes
+volumes:
+  data:
+  logs:
+
